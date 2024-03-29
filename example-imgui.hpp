@@ -14,6 +14,8 @@
 #include <imgui_impl_glfw.h>
 
 
+
+
 //Prototipo FUnciones 
 
 //Funciones prototipo 
@@ -31,9 +33,62 @@ std::tuple<double, double, double> sph2cart(double azimuth, double elevation, do
 // ImGui Helpers            //
 //////////////////////////////
 
+class selection_images{
+public:
+    selection_images(const char* name, ImVec2 position, ImVec2 size) :
+        _name(name), _position(position), _size(size) {}
+
+    void show() {
+        ImGui::SetNextWindowPos(_position);
+        ImGui::SetNextWindowSize(_size);
+
+        if (ImGui::Begin(_name, nullptr,ImGuiWindowFlags_NoResize)) {
+            // Aquí puedes agregar cualquier elemento de la barra de herramientas usando ImGui
+
+            if (ImGui::Button("20")) {
+                // Lógica para el botón 1
+            }
+            ImGui::SameLine();
+
+            if (ImGui::Button("40")) {
+                // Lógica para el botón 2
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("60")) {
+                // Lógica para el botón 2
+            }
+           
+            if (ImGui::Button("100")) {
+                // Lógica para el botón 2
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("120")) {
+                // Lógica para el botón 2
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("120")) {
+                // Lógica para el botón 2
+            }
+
+
+            // Puedes añadir más elementos según sea necesario
+
+        }
+        ImGui::End();
+    }
+
+private:
+    const char* _name;
+    ImVec2 _position;
+    ImVec2 _size;
+};
+
+
+
+
+
+
 //slider for ImGui
-
-
 //Lista de clases para para los componentes 
 class slider {
 public:
@@ -80,6 +135,15 @@ public:
         | ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoBringToFrontOnFocus;     
 };
+
+
+
+
+
+
+
+
+
 
 class imgui_text_input : public slider {
 public:
@@ -179,6 +243,16 @@ public:
         | ImGuiWindowFlags_NoBringToFrontOnFocus
         | ImGuiWindowFlags_AlwaysAutoResize;
 };
+
+
+//input select 
+
+
+
+
+
+
+
 
 
 class hdr_widgets {
@@ -286,22 +360,47 @@ public:
 
 class custom_button {
 public:
-    custom_button(const char* label, ImVec2 position, ImVec2 size) : _label(label), _position(position), _size(size) {}
+    custom_button(const char* label, ImVec2 position, ImVec2 size, float valueSlider0, float valueSlider1, float valueSlider2, float valueSlider3) 
+        : _label(label), _position(position), _size(size), _valueSlider0(valueSlider0), _valueSlider1(valueSlider1), _valueSlider2(valueSlider2), _valueSlider3(valueSlider3) {}
+
 
     void show() {
         ImGui::SetNextWindowSize(_size);
         ImGui::SetNextWindowPos(_position);
         ImGui::Begin(_label, nullptr, _sliders_flags_2);
+
+
         if (ImGui::Button(_label, ImVec2(250, 50))) {
            std::cout << "Hola inge" << std::endl;
+           std::cout << "Valor del slider 0: " << _valueSlider0 << std::endl;
         }
+
+        ImGui::Text("\n"); // Espacio para mover el segundo botón a la siguiente línea
+        
+        if (ImGui::Button("Pausar proceso", ImVec2(250, 50))) {
+            std::cout << "Hola inge (Botón 2)" << std::endl;
+        }
+
+        ImGui::Text("\n"); // Espacio para mover el segundo botón a la siguiente línea
+
+        if (ImGui::Button("Detener proceso", ImVec2(250, 50))) {
+            std::cout << "Hola inge (Botón 2)" << std::endl;
+        }
+
     }
 
 public:
-    
     const char* _label;
     ImVec2 _position;
     ImVec2 _size;
+
+    float _valueSlider0;
+    float _valueSlider1;
+    float _valueSlider2;
+    float _valueSlider3;
+    float _GAltitude;
+    float _GAsimut;
+    float _GRoll;
 
     const static int _sliders_flags_2= ImGuiWindowFlags_NoCollapse
         | ImGuiWindowFlags_NoScrollbar

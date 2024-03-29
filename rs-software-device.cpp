@@ -7,8 +7,6 @@
 #include "example-imgui.hpp"
 
 
-
-
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -142,7 +140,9 @@ int main(int argc, char * argv[]) try
     rs2::points points;
     int frame_number = 0;
 
-    
+    selection_images main_toolbar("Selecion de numero de imagenes", ImVec2(1000, 500), ImVec2(150, 150));
+
+
  // Ajusta las posiciones para organizar los elementos en una columna
     int spacing = 20; // Espacio entre cada elemento
     int start_x = 50; // Posición inicial en el eje X
@@ -152,20 +152,35 @@ int main(int argc, char * argv[]) try
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento
     
     imgui_slider slider0("Posicion Azimut", 1, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    Slider* slider0_ptr = &slider0;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_slider slider1("Posicion Altitud", 2, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    Slider* slider1_ptr = &slider1;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_slider slider2("Posicion Roll", 3, 25.0f, 0.0f, 50.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    Slider* slider2_ptr = &slider2;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_slider slider3("Radio de Esfera",4, 75.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    Slider* slider3_ptr = &slider3;
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento  
     
 
-    custom_button myButton("Inicio de proceso!", ImVec2(start_x, start_y), ImVec2(250, 200));
+    //Punteros donde se les pasa los datos actualizados del slider 
+    
+    // Suponiendo que tienes punteros a los sliders llamados slider0_ptr, slider1_ptr, slider2_ptr y slider3_ptr
+    custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), 
+                    slider0_ptr->getValue(), slider1_ptr->getValue(), 
+                    slider2_ptr->getValue(), slider3_ptr->getValue());
     start_y += 500 + spacing; // Ajustar la posición Y para el siguiente elemento
+
+
+
+
+
+    
 
     imgui_text_input my_text_input("Text Input", 0, "Initial Text", ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento
@@ -260,36 +275,33 @@ int main(int argc, char * argv[]) try
         }
         draw_pointcloud(app.width(), app.height(), app_state, points);
         ImGui_ImplGlfw_NewFrame(1);
+        //Funciones de calculo de moviemito del robot //////////////////////////////////////////////////////////////////////////////////////////
+        slider0_ptr = &slider0;
+        slider1_ptr = &slider1;
+        slider2_ptr = &slider2;
+        slider3_ptr = &slider3;
 
-        float valueSlider0 = slider0.getValue();
-        std::cout << "Valor del slider 0: " << valueSlider0 << std::endl;
-
-        float valueSlider1 = slider1.getValue();
-        std::cout << "Valor del slider 1: " << valueSlider1 << std::endl;
-
-        float valueSlider2 = slider2.getValue();
-        std::cout << "Valor del slider 2: " << valueSlider2 << std::endl;
-
-        float valueSlider3 = slider3.getValue();
-        std::cout << "Valor del slider 3: " << valueSlider3 << std::endl;
-
-        //Funciones de calculo de moviemito del robot 
-        CalcularGrados(6,6,3,GAltitude,GAsimut,GRoll);
-        std::cout << "Grados en Altitude: " << GAltitude << std::endl;
-        std::cout << "Grados en Asimuth: " << GAsimut << std::endl; 
-        std::cout << "Grados en Roll:" << GRoll << std::endl;
+        // Obtener los valores de los sliders actualizados
+        float valueSlider0 = slider0_ptr->getValue();
+        float valueSlider1 = slider1_ptr->getValue();
+        float valueSlider2 = slider2_ptr->getValue();
+        float valueSlider3 = slider3_ptr->getValue();
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         
-
+        //Mandar llamar a los metodos de la clases 
+        
+        main_toolbar.show();
         slider0.show();
         slider1.show();
         slider2.show();
         slider3.show();
         myButton.show();
         my_text_input.show();
+        
         ImGui::Render();
     }
-
+    
     return EXIT_SUCCESS;
 }
 catch (const rs2::error & e)
