@@ -148,39 +148,20 @@ int main(int argc, char * argv[]) try
     int start_x = 50; // Posición inicial en el eje X
     int start_y = 50; // Posición inicial en el eje Y
 
-    text_box my_text_box("MiTextBox", ImVec2(start_x, start_y), ImVec2(200, 100));
-    start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento
-    
     imgui_slider slider0("Posicion Azimut", 1, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
-    Slider* slider0_ptr = &slider0;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_slider slider1("Posicion Altitud", 2, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
-    Slider* slider1_ptr = &slider1;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_slider slider2("Posicion Roll", 3, 25.0f, 0.0f, 50.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
-    Slider* slider2_ptr = &slider2;
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
-    imgui_slider slider3("Radio de Esfera",4, 75.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
-    Slider* slider3_ptr = &slider3;
+    imgui_slider slider3("Radio de Esfera", 4, 75.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento  
-    
 
-    //Punteros donde se les pasa los datos actualizados del slider 
-    
-    // Suponiendo que tienes punteros a los sliders llamados slider0_ptr, slider1_ptr, slider2_ptr y slider3_ptr
-    custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), 
-                    slider0_ptr->getValue(), slider1_ptr->getValue(), 
-                    slider2_ptr->getValue(), slider3_ptr->getValue());
+    custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), &slider0, &slider1, &slider2, &slider3);
     start_y += 500 + spacing; // Ajustar la posición Y para el siguiente elemento
-
-
-
-
-
-    
 
     imgui_text_input my_text_input("Text Input", 0, "Initial Text", ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento
@@ -276,16 +257,12 @@ int main(int argc, char * argv[]) try
         draw_pointcloud(app.width(), app.height(), app_state, points);
         ImGui_ImplGlfw_NewFrame(1);
         //Funciones de calculo de moviemito del robot //////////////////////////////////////////////////////////////////////////////////////////
-        slider0_ptr = &slider0;
-        slider1_ptr = &slider1;
-        slider2_ptr = &slider2;
-        slider3_ptr = &slider3;
 
-        // Obtener los valores de los sliders actualizados
-        float valueSlider0 = slider0_ptr->getValue();
-        float valueSlider1 = slider1_ptr->getValue();
-        float valueSlider2 = slider2_ptr->getValue();
-        float valueSlider3 = slider3_ptr->getValue();
+     
+
+
+        
+;
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         
@@ -301,7 +278,7 @@ int main(int argc, char * argv[]) try
         
         ImGui::Render();
     }
-    
+
     return EXIT_SUCCESS;
 }
 catch (const rs2::error & e)

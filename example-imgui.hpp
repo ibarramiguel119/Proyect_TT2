@@ -357,22 +357,22 @@ public:
 };
 
 
-
 class custom_button {
 public:
-    custom_button(const char* label, ImVec2 position, ImVec2 size, float valueSlider0, float valueSlider1, float valueSlider2, float valueSlider3) 
-        : _label(label), _position(position), _size(size), _valueSlider0(valueSlider0), _valueSlider1(valueSlider1), _valueSlider2(valueSlider2), _valueSlider3(valueSlider3) {}
-
+    custom_button(const char* label, ImVec2 position, ImVec2 size, imgui_slider* slider0, imgui_slider* slider1, imgui_slider* slider2, imgui_slider* slider3) 
+        : _label(label), _position(position), _size(size), _slider0(slider0), _slider1(slider1), _slider2(slider2), _slider3(slider3) {}
 
     void show() {
         ImGui::SetNextWindowSize(_size);
         ImGui::SetNextWindowPos(_position);
         ImGui::Begin(_label, nullptr, _sliders_flags_2);
 
-
         if (ImGui::Button(_label, ImVec2(250, 50))) {
-           std::cout << "Hola inge" << std::endl;
-           std::cout << "Valor del slider 0: " << _valueSlider0 << std::endl;
+            std::cout << "Hola inge" << std::endl;
+            std::cout << "Valor del slider 0: " << _slider0->getValue() << std::endl;
+            std::cout << "Valor del slider 1: " << _slider1->getValue() << std::endl;
+            std::cout << "Valor del slider 2: " << _slider2->getValue() << std::endl;
+            std::cout << "Valor del slider 3: " << _slider3->getValue() << std::endl;
         }
 
         ImGui::Text("\n"); // Espacio para mover el segundo botón a la siguiente línea
@@ -387,6 +387,7 @@ public:
             std::cout << "Hola inge (Botón 2)" << std::endl;
         }
 
+        ImGui::End();
     }
 
 public:
@@ -394,13 +395,10 @@ public:
     ImVec2 _position;
     ImVec2 _size;
 
-    float _valueSlider0;
-    float _valueSlider1;
-    float _valueSlider2;
-    float _valueSlider3;
-    float _GAltitude;
-    float _GAsimut;
-    float _GRoll;
+    imgui_slider* _slider0;
+    imgui_slider* _slider1;
+    imgui_slider* _slider2;
+    imgui_slider* _slider3;
 
     const static int _sliders_flags_2= ImGuiWindowFlags_NoCollapse
         | ImGuiWindowFlags_NoScrollbar
@@ -410,6 +408,7 @@ public:
         | ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoBringToFrontOnFocus;   
 };
+
 
 
 //Lista de funciones para el algoritmo de movimiento del robot 
