@@ -92,7 +92,7 @@ private:
 //Lista de clases para para los componentes 
 class slider {
 public:
-    slider(const char* name, int seq_id, float init_value, float min_value, float max_value, ImVec2 position, ImVec2 size) :
+    slider(const char* name, int seq_id, int init_value, int min_value, int max_value, ImVec2 position, ImVec2 size) :
         _name(name), _seq_id(seq_id), _value(init_value), _min_value(min_value), _max_value(max_value), _position(position), _size(size) {}
 
     void virtual show()=0;
@@ -100,9 +100,9 @@ public:
 public:
     const char* _name;
     int _seq_id;
-    float _value;
-    float _max_value;
-    float _min_value;
+    int _value;
+    int _max_value;
+    int _min_value;
     ImVec2 _position;
     ImVec2 _size;
 
@@ -110,14 +110,14 @@ public:
 
 class imgui_slider : public slider {
 public:
-    imgui_slider(const char* name, int seq_id, float init_value, float min_value, float max_value, ImVec2 position, ImVec2 size) :
+    imgui_slider(const char* name, int seq_id, int init_value, int min_value, int max_value, ImVec2 position, ImVec2 size) :
         slider(name, seq_id, init_value, min_value, max_value, position, size) {}
 
     void show() override {
         ImGui::SetNextWindowSize(_size);
         ImGui::SetNextWindowPos(_position);
         ImGui::Begin(_name, nullptr, _sliders_flags_1);
-        if (ImGui::SliderFloat(_name, &_value, _min_value, _max_value)) {
+        if (ImGui::SliderInt(_name, &_value, _min_value, _max_value)) {
             std::cout << "Slider value: " << _value << std::endl;
         }
     }
@@ -175,7 +175,7 @@ public:
 
 class hdr_slider : public slider {
 public:
-    hdr_slider(const char* name, int seq_id, float init_value, rs2::sensor& sensor,
+    hdr_slider(const char* name, int seq_id, int init_value, rs2::sensor& sensor,
         rs2_option option, rs2::option_range range, ImVec2 position, ImVec2 size) : slider(name, seq_id, init_value, range.min, range.max, position, size),
         _sensor(sensor), _option(option), _range(range){}
 
@@ -188,7 +188,7 @@ public:
         ImGui::Begin(name_id.c_str(), nullptr, _sliders_flags);
         ImGui::Text("%s",_name);
         bool is_changed =
-            ImGui::SliderFloat("", &_value, _min_value, _max_value, "%.3f", 5.0f, false); //5.0f for logarithmic scale 
+            ImGui::SliderInt("", &_value, _min_value, _max_value); //5.0f for logarithmic scale 
         if (is_changed) {
             _sensor.set_option(RS2_OPTION_SEQUENCE_ID, float(_seq_id));
             _sensor.set_option(_option, _value);
@@ -368,12 +368,64 @@ public:
         ImGui::Begin(_label, nullptr, _sliders_flags_2);
 
         if (ImGui::Button(_label, ImVec2(250, 50))) {
-            std::cout << "Hola inge" << std::endl;
-            std::cout << "Valor del slider 0: " << _slider0->getValue() << std::endl;
             std::cout << "Valor del slider 1: " << _slider1->getValue() << std::endl;
             std::cout << "Valor del slider 2: " << _slider2->getValue() << std::endl;
             std::cout << "Valor del slider 3: " << _slider3->getValue() << std::endl;
+            int GAltitude,GAsimut,GRoll;/// Son los datos que regresa la funcion calcularGrados
+            int radioEsfera=299;////Esta dato sera ingresado desde la interface de ususario 
+            CalcularGrados(_slider1->getValue(),_slider0->getValue(),_slider2->getValue(),GAltitude,GAsimut,GRoll);
+            std::cout << "Grados en Altitude: " << GAltitude << std::endl;
+            std::cout << "Grados en Asimuth: " << GAsimut << std::endl; 
+            std::cout << "Grados en Roll:" << GRoll << std::endl;
+
+            //Muestra el arreglo de distribuccion de angulos de Azimuth
+            std::vector<int> resultado1 = CalcularArreglo1(GAsimut);
+            // Imprimir el contenido del vector devuelto
+            std::cout << "Los datos del arreglo 1:"<< std::endl;
+            for (int value1 : resultado1) {
+                std::cout << value1 << " ";
+            }
+            std::cout<< std::endl;
+
+            //Muestra el arreglo de distribuccion de angulos de Altitude
+            std::vector<int> resultado2 = CalcularArreglo2(GAltitude);
+            // Imprimir el contenido del vector devuelto
+            std::cout << "Los datos del arreglo 2:"<< std::endl;
+            for (int value2 : resultado2) {
+                std::cout << value2 << " ";
+            }
+            std::cout<< std::endl;
+
+            //Muestra el arreglo de distribuccion de grados de Roll
+            std::vector<int> resultado3 = CalcularArreglo3(GRoll);
+            // Imprimir el contenido del vector devuelto
+            std::cout << "Los datos del arreglo 3:"<< std::endl;
+            for (int value3 : resultado3) {
+            std::cout << value3 << " ";
+            }
+            std::cout<< std::endl;
+            // Esta funcion calcula los puntos de posicionamiento de la circunferencia
+            //CalcularPuntosMovimiento(resultado1,resultado2,radioEsfera);
+            //result continen los datos q1 q2 q3
+            std::vector<std::vector<int>> result = CalcularPuntosMovimiento(resultado1,resultado2,radioEsfera);
+            //Imprime los datos del vector result
+            //for (const std::vector<int>& row : result) {
+                //for (int element : row) {
+                    //std::cout << element << " ";
+                //}
+            //std::cout << std::endl;
+            //} 
+   
+
+            // Imprimir el resultado
+            // Calculo del tamaño del tamaño de la forma en se movera el robot 
+            int si = (resultado1.size() - 1) * (resultado2.size() - 1);
+             std::cout<<si<< std::endl;
+
+             ///Imprimir los datos de vector D por separado
+            CalcularPuntosCinematicaInversa(result,si); 
         }
+
 
         ImGui::Text("\n"); // Espacio para mover el segundo botón a la siguiente línea
         
@@ -412,11 +464,6 @@ public:
 
 
 //Lista de funciones para el algoritmo de movimiento del robot 
-
-int suma(int a, int b) {
-    return a + b;
-}
-
 
 //Calcula los grados de los imputs 
 void CalcularGrados(int Altitud, int Asimuth, int Roll ,int& GAltitude, int& GAsimut, int& GRoll ){

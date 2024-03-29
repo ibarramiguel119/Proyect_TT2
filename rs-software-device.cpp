@@ -148,16 +148,16 @@ int main(int argc, char * argv[]) try
     int start_x = 50; // Posición inicial en el eje X
     int start_y = 50; // Posición inicial en el eje Y
 
-    imgui_slider slider0("Posicion Azimut", 1, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    imgui_slider slider0("Posicion Azimut", 1, 1, 1, 360, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
-    imgui_slider slider1("Posicion Altitud", 2, 50.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    imgui_slider slider1("Posicion Altitud", 2, 1, 1, 60, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
-    imgui_slider slider2("Posicion Roll", 3, 25.0f, 0.0f, 50.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    imgui_slider slider2("Posicion Roll", 3, 1,1, 180, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 20 + spacing; // Ajustar la posición Y para el siguiente elemento
 
-    imgui_slider slider3("Radio de Esfera", 4, 75.0f, 0.0f, 100.0f, ImVec2(start_x, start_y), ImVec2(360, 20));
+    imgui_slider slider3("Radio de Esfera", 4, 1, 1, 180, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento  
 
     custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), &slider0, &slider1, &slider2, &slider3);
