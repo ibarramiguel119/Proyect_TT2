@@ -41,10 +41,185 @@ std::tuple<double, double, double> sph2cart(double azimuth, double elevation, do
 std::string findSerialPort();
 std::string floatToString(float value, int precision);
 
+void procesarDatos(int slider1Value, int slider0Value, int slider2Value); 
+
 
 //////////////////////////////
 // ImGui Helpers            //
 //////////////////////////////
+
+
+
+class CheckboxGroup {
+public:
+    CheckboxGroup(const char* name, ImVec2 position, ImVec2 size, std::vector<std::string> options) :
+        _name(name), _position(position), _size(size), _options(options) {}
+
+    void show() {
+        ImGui::SetNextWindowPos(_position);
+        ImGui::SetNextWindowSize(_size);
+
+        if (ImGui::Begin(_name, nullptr, ImGuiWindowFlags_NoResize)) {
+            for (int i = 0; i < _options.size(); ++i) {
+                bool checked = _checkboxStates[i];
+                if (ImGui::Checkbox(_options[i].c_str(), &checked)) {
+                    // Lógica para manejar el cambio de estado del checkbox
+                    _checkboxStates[i] = checked;
+
+                    if (checked) {
+                        std::cout << "Checkbox \"" << _options[i] << "\" seleccionado." << std::endl;
+                        switch (i)
+                        {
+                        case 0:
+                            _selectedMOde=1;
+                            std::cout << "Modo 1 selecionado" << std::endl;
+                            break;
+                        case 1:
+                            _selectedMOde=2;
+                            std::cout << "Modo 2 selecionado" << std::endl;
+                            break;
+                        default:
+                            break;
+                        }
+                        
+                    } else {
+                        std::cout << "Checkbox \"" << _options[i] << "\" deseleccionado." << std::endl;
+                    }
+                }
+            }
+        }
+        ImGui::End();
+    }
+
+
+    int getSelectedMode() const {
+        return _selectedMOde;
+    }
+
+private:
+    const char* _name;
+    ImVec2 _position;
+    ImVec2 _size;
+    std::vector<std::string> _options;
+    std::vector<bool> _checkboxStates = std::vector<bool>(_options.size(), false);
+    int _selectedMOde;
+};
+
+
+
+class SelectGroup {
+public:
+    SelectGroup(const char* name, ImVec2 position, ImVec2 size, std::vector<std::string> options) :
+        _name(name), _position(position), _size(size), _options(options) {}
+
+    void show() {
+        ImGui::SetNextWindowPos(_position);
+        ImGui::SetNextWindowSize(_size);
+
+        if (ImGui::Begin(_name, nullptr, ImGuiWindowFlags_NoResize)) {
+            for (int i = 0; i < _options.size(); ++i) {
+                bool checked = _checkboxStates[i];
+                if (ImGui::Checkbox(_options[i].c_str(), &checked)) {
+                    // Lógica para manejar el cambio de estado del checkbox
+                    _checkboxStates[i] = checked;
+
+                    if (checked) {
+                        std::cout << "Checkbox \"" << _options[i] << "\" seleccionado." << std::endl;
+                        switch (i)
+                        {
+                        case 0:
+                            std::cout << "Logica de 36 imagenes" << std::endl;
+                            _selectedIndex = 36;
+                            break;
+                        case 1:
+                            std::cout << "Logica de 54 imagenes" << std::endl;
+                            _selectedIndex = 54;
+                            break;    
+                        case 2:
+                            std::cout << "Logica de 72 imagenes" << std::endl;
+                            _selectedIndex = 72;
+                            break;
+
+                        case 3:
+                            std::cout << "Logica de 128 imagenes" << std::endl;
+                            _selectedIndex = 128;
+                            break;
+                        case 4:
+                            std::cout << "Logica de 256 imagenes" << std::endl;
+                            _selectedIndex = 256;
+                            break;
+                        case 5:
+                            std::cout << "Logica de 512 imagenes" << std::endl;
+                            _selectedIndex = 512;
+                            break;        
+                        default:
+                            std::cout << "Logica corronpida" << std::endl;
+                            
+                        }
+
+
+                    } else {
+                        std::cout << "Checkbox \"" << _options[i] << "\" deseleccionado." << std::endl;
+                        switch (i)
+                        {
+                        case 0:
+                            std::cout << "Logica de 36 imagenes desactivada " << std::endl;
+                            break;
+                        case 1:
+                            std::cout << "Logica de 54 imagenes desactivada" << std::endl;
+                            break;    
+                        case 2:
+                            std::cout << "Logica de 72 imagenes desactivada" << std::endl;
+                            break;
+
+                        case 3:
+                            std::cout << "Logica de 128 imagenes desactivada" << std::endl;
+                            break;
+                        case 4:
+                            std::cout << "Logica de 256 imagenes  desactivada" << std::endl;
+                            break;
+                        case 5:
+                            std::cout << "Logica de 512 imagenes desactivada" << std::endl;
+                            break;        
+                        default:
+                            std::cout << "Logica de desactivacion corronpida" << std::endl;
+                        }
+
+                    }
+                }
+            }
+        }
+        ImGui::End();
+    }
+
+
+
+    int getSelectedIndex() const {
+        return _selectedIndex;
+    }
+
+private:
+    const char* _name;
+    ImVec2 _position;
+    ImVec2 _size;
+    std::vector<std::string> _options;
+    std::vector<bool> _checkboxStates = std::vector<bool>(_options.size(), false);
+    int _selectedIndex;
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class selection_images{
 public:
@@ -445,8 +620,8 @@ public:
 
 class custom_button {
 public:
-    custom_button(const char* label, ImVec2 position, ImVec2 size, imgui_slider* slider0, imgui_slider* slider1, imgui_slider* slider2, imgui_slider* slider3) 
-        : _label(label), _position(position), _size(size), _slider0(slider0), _slider1(slider1), _slider2(slider2), _slider3(slider3) {}
+    custom_button(const char* label, ImVec2 position, ImVec2 size, imgui_slider* slider0, imgui_slider* slider1, imgui_slider* slider2, imgui_slider* slider3, SelectGroup* selectImages,CheckboxGroup* checkboxGroup) 
+        : _label(label), _position(position), _size(size), _slider0(slider0), _slider1(slider1), _slider2(slider2), _slider3(slider3),_selectImages(selectImages),_checkboxGroup(checkboxGroup){}
 
     void show() {
         ImGui::SetNextWindowSize(_size);
@@ -454,63 +629,57 @@ public:
         ImGui::Begin(_label, nullptr, _sliders_flags_2);
 
         if (ImGui::Button(_label, ImVec2(250, 50))) {
-            std::cout << "Valor del slider 0: " << _slider0->getValue() << std::endl;
-            std::cout << "Valor del slider 1: " << _slider1->getValue() << std::endl;
-            std::cout << "Valor del slider 2: " << _slider2->getValue() << std::endl;
-            std::cout << "Valor del slider 3: " << _slider3->getValue() << std::endl;
-            int GAltitude,GAsimut,GRoll;/// Son los datos que regresa la funcion calcularGrados
-            int radioEsfera=299;////Esta dato sera ingresado desde la interface de ususario 
-            CalcularGrados(_slider1->getValue(),_slider0->getValue(),_slider2->getValue(),GAltitude,GAsimut,GRoll);
-            std::cout << "Grados en Altitude: " << GAltitude << std::endl;
-            std::cout << "Grados en Asimuth: " << GAsimut << std::endl; 
-            std::cout << "Grados en Roll:" << GRoll << std::endl;
+           
+            std::cout << "Valor de selecion de modo: " << _checkboxGroup->getSelectedMode()<< std::endl;
+            //Seleccionar modo 
 
-            //Muestra el arreglo de distribuccion de angulos de Azimuth
-            std::vector<int> resultado1 = CalcularArreglo1(GAsimut);
-            // Imprimir el contenido del vector devuelto
-            std::cout << "Los datos del arreglo 1:"<< std::endl;
-            for (int value1 : resultado1) {
-                std::cout << value1 << " ";
+            switch (_checkboxGroup->getSelectedMode())
+            {
+            case 1:
+                std::cout << "Se ha seleciondado el modo 1 con este modo vamos a cambiar la logica  " << std::endl;
+                 //Datos del modo 1s
+                std::cout << "Valor del slider 0: " << _slider0->getValue() << std::endl;
+                std::cout << "Valor del slider 1: " << _slider1->getValue() << std::endl;
+                std::cout << "Valor del slider 2: " << _slider2->getValue() << std::endl;
+                std::cout << "Valor del slider 3: " << _slider3->getValue() << std::endl;
+                
+                procesarDatos(_slider1->getValue(), _slider0->getValue(), _slider2->getValue());
+
+
+                break;
+            case 2:  
+                std::cout << "Se ha recibido el modo 2 con este modo se va a cambiar la logica " << std::endl;
+                std::cout << "Valor de recuadro de selecion modo 2: " << _selectImages->getSelectedIndex()<< std::endl;
+
+                switch (_selectImages->getSelectedIndex())
+                {
+                case 36: 
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 36 " << std::endl;
+                    std::cout <<a<< std::endl;
+                    break;
+                case 56:
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 56" << std::endl;
+                    break;    
+                case 72:
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 72" << std::endl;
+                    break;
+                case 128:
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 128" << std::endl;
+                    break;
+                case 256:
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 256" << std::endl;
+                    break;
+                case 512:
+                    std::cout << "Se ha inicializado el el modo de selecion automatico 512" << std::endl;
+                    break;
+                default:
+                    std::cout << "Error verificar el problema con el dato de entrada" << std::endl;
+                    break;
+                }
+            default:
+                break;
             }
-            std::cout<< std::endl;
-
-            //Muestra el arreglo de distribuccion de angulos de Altitude
-            std::vector<int> resultado2 = CalcularArreglo2(GAltitude);
-            // Imprimir el contenido del vector devuelto
-            std::cout << "Los datos del arreglo 2:"<< std::endl;
-            for (int value2 : resultado2) {
-                std::cout << value2 << " ";
-            }
-            std::cout<< std::endl;
-
-            //Muestra el arreglo de distribuccion de grados de Roll
-            std::vector<int> resultado3 = CalcularArreglo3(GRoll);
-            // Imprimir el contenido del vector devuelto
-            std::cout << "Los datos del arreglo 3:"<< std::endl;
-            for (int value3 : resultado3) {
-            std::cout << value3 << " ";
-            }
-            std::cout<< std::endl;
-            // Esta funcion calcula los puntos de posicionamiento de la circunferencia
-            //CalcularPuntosMovimiento(resultado1,resultado2,radioEsfera);
-            //result continen los datos q1 q2 q3
-            std::vector<std::vector<int>> result = CalcularPuntosMovimiento(resultado1,resultado2,radioEsfera);
-            //Imprime los datos del vector result
-            //for (const std::vector<int>& row : result) {
-                //for (int element : row) {
-                    //std::cout << element << " ";
-                //}
-            //std::cout << std::endl;
-            //} 
-   
-
-            // Imprimir el resultado
-            // Calculo del tamaño del tamaño de la forma en se movera el robot 
-            int si = (resultado1.size() - 1) * (resultado2.size() - 1);
-             std::cout<<si<< std::endl;
-
-             ///Imprimir los datos de vector D por separado
-            CalcularPuntosCinematicaInversa(result,si); 
+            
         }
 
 
@@ -543,7 +712,7 @@ public:
                 tcsetattr(serial_fd, TCSANOW, &serial_options);
 
                 // Datos a enviar
-                std::string data = "pausar!\n";
+                std::string data = "0";
                 write(serial_fd, data.c_str(), data.length());
                 std::cout << "Datos enviados:" << data << std::endl;
                 std::cout << "Datos enviados correctamente." << std::endl;
@@ -599,6 +768,9 @@ public:
     }
 
 public:
+    int a=6;
+    int b=6;
+    int c=3;
     const char* _label;
     ImVec2 _position;
     ImVec2 _size;
@@ -607,6 +779,10 @@ public:
     imgui_slider* _slider1;
     imgui_slider* _slider2;
     imgui_slider* _slider3;
+    SelectGroup*  _selectImages;
+    CheckboxGroup* _checkboxGroup;
+
+
 
     const static int _sliders_flags_2= ImGuiWindowFlags_NoCollapse
         | ImGuiWindowFlags_NoScrollbar
@@ -870,6 +1046,61 @@ std::string floatToString(float value, int precision) {
     ss << std::fixed << std::setprecision(precision) << value;
     return ss.str();
 }
+
+
+
+void procesarDatos(int slider1Value, int slider0Value, int slider2Value) {
+    int GAltitude, GAsimut, GRoll;
+    int radioEsfera = 299;
+
+    CalcularGrados(slider1Value, slider0Value, slider2Value, GAltitude, GAsimut, GRoll);
+    std::cout << "Grados en Altitude: " << GAltitude << std::endl;
+    std::cout << "Grados en Asimuth: " << GAsimut << std::endl;
+    std::cout << "Grados en Roll:" << GRoll << std::endl;
+
+    //Muestra el arreglo de distribuccion de angulos de Azimuth
+    std::vector<int> resultado1 = CalcularArreglo1(GAsimut);
+    // Imprimir el contenido del vector devuelto
+    std::cout << "Los datos del arreglo 1:" << std::endl;
+    for (int value1 : resultado1) {
+        std::cout << value1 << " ";
+    }
+    std::cout << std::endl;
+
+    //Muestra el arreglo de distribuccion de angulos de Altitude
+    std::vector<int> resultado2 = CalcularArreglo2(GAltitude);
+    // Imprimir el contenido del vector devuelto
+    std::cout << "Los datos del arreglo 2:" << std::endl;
+    for (int value2 : resultado2) {
+        std::cout << value2 << " ";
+    }
+    std::cout << std::endl;
+
+    //Muestra el arreglo de distribuccion de grados de Roll
+    std::vector<int> resultado3 = CalcularArreglo3(GRoll);
+    // Imprimir el contenido del vector devuelto
+    std::cout << "Los datos del arreglo 3:" << std::endl;
+    for (int value3 : resultado3) {
+        std::cout << value3 << " ";
+    }
+    std::cout << std::endl;
+
+    // Esta funcion calcula los puntos de posicionamiento de la circunferencia
+    std::vector<std::vector<int>> result = CalcularPuntosMovimiento(resultado1, resultado2, slider2Value);
+
+    // Imprimir el resultado
+    // Calculo del tamaño del tamaño de la forma en se movera el robot 
+    int si = (resultado1.size() - 1) * (resultado2.size() - 1);
+    std::cout << si << std::endl;
+
+    ///Imprimir los datos de vector D por separado
+    CalcularPuntosCinematicaInversa(result, si);
+}
+
+
+
+
+
 
 
 

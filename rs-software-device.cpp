@@ -140,8 +140,16 @@ int main(int argc, char * argv[]) try
     rs2::points points;
     int frame_number = 0;
 
-    selection_images main_toolbar("Selecion de numero de imagenes", ImVec2(1600, 100), ImVec2(250, 150));
-    map_port mapPort{"Mapa de puertos", ImVec2(1600, 100), ImVec2(200, 100)};
+    selection_images main_toolbar("Selecion de numero de Imágenes", ImVec2(1600, 100), ImVec2(250, 150));
+    map_port mapPort{"Mapa de puertos", ImVec2(1600, 300), ImVec2(200, 100)};
+
+
+    //Seleccion de boxes
+    std::vector<std::string> options = { "Modo 1", "Modo 2"};
+    CheckboxGroup checkboxGroup("Seleccion de modo de captura", ImVec2(800, 40), ImVec2(250, 100), options);
+
+    std::vector<std::string> options_1= { "36 imágenes", "54 imágenes","72 imágenes ","128 imágenes","256 imágenes","512 imágenes"};
+    SelectGroup selectImages("Seleccion de numero de imagenes", ImVec2(1600, 500), ImVec2(250,600), options_1);
     
 
  // Ajusta las posiciones para organizar los elementos en una columna
@@ -161,7 +169,7 @@ int main(int argc, char * argv[]) try
     imgui_slider slider3("Radio de Esfera", 4, 1, 1, 180, ImVec2(start_x, start_y), ImVec2(360, 20));
     start_y += 100 + spacing; // Ajustar la posición Y para el siguiente elemento  
 
-    custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), &slider0, &slider1, &slider2, &slider3);
+    custom_button myButton("Iniciar captura", ImVec2(start_x, start_y), ImVec2(250, 200), &slider0, &slider1, &slider2, &slider3,&selectImages,&checkboxGroup);
     start_y += 500 + spacing; // Ajustar la posición Y para el siguiente elemento
 
     imgui_text_input my_text_input("Text Input", 0, "Initial Text", ImVec2(start_x, start_y), ImVec2(360, 20));
@@ -276,6 +284,8 @@ int main(int argc, char * argv[]) try
         slider3.show();
         myButton.show();
         my_text_input.show();
+        checkboxGroup.show();
+        selectImages.show();
         
         ImGui::Render();
     }
