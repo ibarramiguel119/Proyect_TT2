@@ -210,17 +210,6 @@ private:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 class selection_images{
 public:
     selection_images(const char* name, ImVec2 position, ImVec2 size) :
@@ -270,8 +259,6 @@ private:
     ImVec2 _position;
     ImVec2 _size;
 };
-
-
 
 
 class map_port{
@@ -353,10 +340,6 @@ private:
 };
 
 
-
-
-
-
 //slider for ImGui
 //Lista de clases para para los componentes 
 class slider {
@@ -404,13 +387,6 @@ public:
         | ImGuiWindowFlags_NoTitleBar
         | ImGuiWindowFlags_NoBringToFrontOnFocus;     
 };
-
-
-
-
-
-
-
 
 
 
@@ -655,7 +631,7 @@ public:
                 {
                 case 36: 
                     std::cout << "Se ha inicializado el el modo de selecion automatico 36 " << std::endl;
-                    std::cout <<a<< std::endl;
+                    procesarDatos(a,b,c);
                     break;
                 case 56:
                     std::cout << "Se ha inicializado el el modo de selecion automatico 56" << std::endl;
@@ -1046,7 +1022,6 @@ std::string floatToString(float value, int precision) {
     ss << std::fixed << std::setprecision(precision) << value;
     return ss.str();
 }
-
 
 
 void procesarDatos(int slider1Value, int slider0Value, int slider2Value) {
